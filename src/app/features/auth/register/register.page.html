@@ -1,0 +1,114 @@
+<main class="register-shell">
+  <section class="register-hero" aria-labelledby="register-title">
+    <header class="register-hero__header">
+      <p class="register-hero__brand">GestionPro</p>
+      <h1 id="register-title" class="register-hero__title">Crear nueva cuenta</h1>
+      <p class="register-hero__subtitle">Regístrate para administrar productos, usuarios y compras de forma segura.</p>
+    </header>
+
+    <section class="register-card page-card" aria-label="Formulario de registro">
+      <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="register-form__group">
+          <label class="register-form__label" for="name">Nombre completo</label>
+          <input
+            id="name"
+            pInputText
+            type="text"
+            class="register-form__input"
+            [class.is-invalid]="isFieldInvalid('name')"
+            formControlName="name"
+            placeholder="Ej. Ana Martínez"
+            autocomplete="name"
+            [attr.aria-invalid]="isFieldInvalid('name')"
+            aria-describedby="name-error"
+          />
+          @if (getFieldError('name'); as error) {
+            <small id="name-error" class="register-form__error">{{ error }}</small>
+          }
+        </div>
+
+        <div class="register-form__group">
+          <label class="register-form__label" for="email">Correo electrónico</label>
+          <input
+            id="email"
+            pInputText
+            type="email"
+            class="register-form__input"
+            [class.is-invalid]="isFieldInvalid('email')"
+            formControlName="email"
+            placeholder="ana@empresa.com"
+            autocomplete="email"
+            [attr.aria-invalid]="isFieldInvalid('email')"
+            aria-describedby="email-error"
+          />
+          @if (getFieldError('email'); as error) {
+            <small id="email-error" class="register-form__error">{{ error }}</small>
+          }
+        </div>
+
+        <div class="register-form__group">
+          <label class="register-form__label" for="password">Contraseña</label>
+          <input
+            id="password"
+            pInputText
+            type="password"
+            class="register-form__input"
+            [class.is-invalid]="isFieldInvalid('password')"
+            formControlName="password"
+            placeholder="••••••••"
+            autocomplete="new-password"
+            [attr.aria-invalid]="isFieldInvalid('password')"
+            aria-describedby="password-error password-rules"
+          />
+          @if (getFieldError('password'); as error) {
+            <small id="password-error" class="register-form__error">{{ error }}</small>
+          }
+
+          <ul id="password-rules" class="register-form__rules" aria-label="Requisitos de contraseña">
+            @for (rule of passwordRuleStates(); track rule.label) {
+              <li [class.is-valid]="rule.fulfilled">{{ rule.label }}</li>
+            }
+          </ul>
+        </div>
+
+        <div class="register-form__group">
+          <label class="register-form__label" for="password_confirmation">Confirmar contraseña</label>
+          <input
+            id="password_confirmation"
+            pInputText
+            type="password"
+            class="register-form__input"
+            [class.is-invalid]="isFieldInvalid('password_confirmation') || hasPasswordMismatch()"
+            formControlName="password_confirmation"
+            placeholder="Repite tu contraseña"
+            autocomplete="new-password"
+            [attr.aria-invalid]="isFieldInvalid('password_confirmation') || hasPasswordMismatch()"
+            aria-describedby="password-confirmation-error"
+          />
+          @if (getFieldError('password_confirmation'); as error) {
+            <small id="password-confirmation-error" class="register-form__error">{{ error }}</small>
+          }
+        </div>
+
+        @if (generalError(); as error) {
+          <div class="register-form__alert" role="alert" aria-live="polite">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>{{ error }}</span>
+          </div>
+        }
+
+        <button pButton type="submit" class="register-form__submit" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            <i class="pi pi-spin pi-spinner register-form__submit-icon" aria-hidden="true"></i>
+          }
+          <span>{{ isSubmitting() ? 'Creando cuenta...' : 'Registrarse' }}</span>
+        </button>
+      </form>
+
+      <p class="register-card__footer">
+        ¿Ya tienes una cuenta?
+        <a routerLink="/auth/login">Inicia sesión aquí</a>
+      </p>
+    </section>
+  </section>
+</main>

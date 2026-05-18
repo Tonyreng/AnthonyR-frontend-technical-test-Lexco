@@ -282,6 +282,8 @@ Despues de cambios de codigo o configuracion, ejecutar cuando sea viable:
 - `npm run lint` si el proyecto lo tiene configurado.
 - `docker compose config` si se modifica la configuracion de Docker.
 
+Despues de una implementacion funcional, agregar o actualizar tests que cubran el comportamiento nuevo siempre que sea viable.
+
 Si una validacion no puede ejecutarse, dejar claro el motivo.
 
 ## Docker
