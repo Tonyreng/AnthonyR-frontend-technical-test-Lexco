@@ -1,103 +1,111 @@
 # Lexco Frontend
 
-SPA Angular 21 para la prueba tecnica de gestion de usuarios, productos, catalogo y carrito.
-
-## Stack
-
-- Angular 21
-- TypeScript estricto
-- Angular Router con lazy loading
-- SCSS
-- PrimeNG v21
-- Cookies HTTPOnly con `withCredentials: true`
-- Docker Compose para desarrollo local con hot reload
+Frontend Angular 21 preparado para desarrollar la SPA de autenticacion, administracion, catalogo y carrito para la prueba tecnica.
 
 ## Requisitos
 
-- Node.js 24 o superior para ejecucion local sin Docker
+- Docker
+- Docker Compose
+
+Para ejecucion local sin contenedores tambien puede usarse:
+
+- Node.js 24 o superior
 - npm 11 o superior
-- Docker y Docker Compose para ejecucion containerizada
 
-## Backend Esperado
+## Entorno
 
-El frontend consume el backend Laravel ubicado en `../backend/`.
+El proyecto usa Angular 21 con PrimeNG y SCSS.
 
-Valores locales esperados:
+Valores principales para desarrollo local:
 
-- Frontend: `http://localhost:4200`
-- Backend API: `http://localhost/api`
-- CORS backend: debe permitir `http://localhost:4200` con credenciales
+- `http://localhost:4200` para el frontend.
+- `http://localhost/api` como URL base de la API Laravel.
+- Cookies HTTPOnly con `withCredentials: true` para autenticacion por sesion.
+- `CHOKIDAR_USEPOLLING=true` para hot reload dentro de Docker.
 
-La autenticacion usa cookies HTTPOnly. El frontend no usa Bearer tokens ni guarda tokens en storage del navegador.
+Los archivos de entorno actuales son:
 
-## Instalacion Local
+- `src/environments/environment.ts`
+- `src/environments/environment.development.ts`
+
+Valor base configurado actualmente:
+
+- `apiUrl: 'http://localhost/api'`
+
+No subir secretos, tokens ni configuraciones sensibles reales al repositorio.
+
+## Comandos
+
+Instalar dependencias localmente:
 
 ```bash
 npm install
 ```
 
-## Desarrollo Local
+Levantar servidor local sin Docker:
 
 ```bash
 npm start
 ```
 
-La app queda disponible en `http://localhost:4200`.
-
-## Desarrollo Con Docker
-
-Levantar el frontend con hot reload:
+Levantar servicios con Docker y hot reload:
 
 ```bash
 docker compose up --build
 ```
 
-El contenedor monta el codigo local en `/app` y ejecuta Angular con polling para detectar cambios desde Docker:
+Compilar proyecto:
 
 ```bash
-npm run start:docker
+npm run build
 ```
 
-Puerto publicado:
-
-- `4200:4200`
-
-## Scripts
+Ejecutar pruebas unitarias:
 
 ```bash
-npm start
-npm run start:docker
-npm run build
 npm test
 ```
 
-## Configuracion
+Validar configuracion Docker Compose:
 
-La URL base de la API vive en:
-
-- `src/environments/environment.ts`
-- `src/environments/environment.development.ts`
-
-Valor actual:
-
-```ts
-apiUrl: 'http://localhost/api'
+```bash
+docker compose config
 ```
 
-## Estructura Inicial
+## Docker
 
-- `src/app/core/guards/`: `authGuard` y `roleGuard`.
-- `src/app/core/http/`: interceptor de credenciales para cookies HTTPOnly.
-- `src/app/core/models/`: interfaces TypeScript del contrato API.
-- `src/app/core/services/`: servicio central de autenticacion.
-- `src/app/features/auth/`: rutas lazy para login y register.
-- `src/app/features/admin/`: rutas lazy para dashboard, usuarios, productos y perfil.
-- `src/app/features/catalog/`: ruta lazy para catalogo.
-- `src/app/features/cart/`: ruta lazy para carrito.
+La configuracion Docker del frontend vive en:
 
-## Contrato API Inicial
+- `Dockerfile`
+- `compose.yaml`
+- `.dockerignore`
 
-Endpoints principales esperados:
+Comportamiento actual:
+
+- Publica Angular en `4200:4200`.
+- Ejecuta `ng serve --host 0.0.0.0 --poll 1000`.
+- Monta el codigo fuente local en `/app`.
+- Usa un volumen dedicado para `node_modules`.
+- Permite hot reload dentro del contenedor.
+
+Servicio disponible actualmente:
+
+- `angular`
+
+## Integracion Con Backend
+
+El frontend consume el backend Laravel ubicado en `../backend/`.
+
+Contrato de integracion esperado:
+
+- Frontend local: `http://localhost:4200`
+- Backend local: `http://localhost/api`
+- CORS backend debe permitir credenciales desde Angular.
+- El frontend no usa Bearer tokens.
+- La sesion autenticada viaja en cookie HTTPOnly.
+- El backend es la fuente real de permisos, roles, stock, precios y total de compra.
+
+Endpoints soportados actualmente por el backend:
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
@@ -118,7 +126,80 @@ Endpoints principales esperados:
 - `GET /api/catalog/products/{product}`
 - `POST /api/purchases`
 
-Las compras deben enviarse sin precios ni totales calculados por el cliente:
+## Arquitectura Actual
+
+La aplicacion esta preparada con componentes standalone, lazy loading y una capa inicial de tipado para el contrato backend.
+
+Estructura principal:
+
+- `src/app/core/guards/`: `authGuard` y `roleGuard`.
+- `src/app/core/http/`: interceptor global de credenciales para cookies HTTPOnly.
+- `src/app/core/models/`: interfaces TypeScript alineadas al contrato actual del backend.
+- `src/app/core/services/`: servicios singleton, actualmente con base para autenticacion.
+- `src/app/features/auth/`: rutas lazy para login y register.
+- `src/app/features/admin/`: rutas lazy para dashboard, usuarios, productos y perfil.
+- `src/app/features/catalog/`: ruta lazy de catalogo autenticado.
+- `src/app/features/cart/`: ruta lazy de carrito.
+
+## Tipado Del Contrato API
+
+La capa de tipos actual cubre:
+
+- Respuestas genericas `ApiResponse<T>`.
+- Respuestas paginadas `PaginatedApiResponse<T>`.
+- Meta de paginacion.
+- Errores comunes `401`, `403`, `404`, `409` y `422`.
+- Tipos de auth, usuarios, productos, catalogo y compras.
+- Payloads de creacion, actualizacion y filtros para user management y product management.
+
+Archivos principales:
+
+- `src/app/core/models/api-response.ts`
+- `src/app/core/models/user.ts`
+- `src/app/core/models/product.ts`
+- `src/app/core/models/purchase.ts`
+- `src/app/core/models/index.ts`
+
+## Autenticacion
+
+La configuracion base de autenticacion corresponde al commit inicial del frontend y al contrato backend publicado.
+
+Flujos preparados:
+
+- Register con `name`, `email`, `password` y `password_confirmation`.
+- Login con `email` y `password`.
+- Obtencion del usuario autenticado actual con `GET /api/auth/me`.
+- Logout con `POST /api/auth/logout`.
+
+Detalles de integracion:
+
+- Todas las peticiones HTTP autenticadas usan `withCredentials: true`.
+- El backend devuelve auth como `data.user`.
+- El frontend no almacena tokens sensibles.
+
+## Rutas Y Pantallas Base
+
+Rutas lazy registradas actualmente:
+
+- `/auth/login`
+- `/auth/register`
+- `/admin`
+- `/admin/users`
+- `/admin/products`
+- `/admin/profile`
+- `/catalog`
+- `/cart`
+
+Restricciones preparadas:
+
+- `authGuard` protege rutas privadas.
+- `roleGuard` protege rutas exclusivas de `admin`.
+
+## Compra De Productos
+
+El frontend esta alineado con el contrato backend para crear compras mediante `POST /api/purchases`.
+
+Payload esperado:
 
 ```json
 {
@@ -131,26 +212,45 @@ Las compras deben enviarse sin precios ni totales calculados por el cliente:
 }
 ```
 
-## Validacion
+Reglas relevantes:
 
-Compilar:
+- No enviar `price`, `stock`, `subtotal`, `total`, `status` ni `user_id` como fuente de verdad.
+- El backend recalcula precios, stock y total.
+- El frontend debe usar el stock solo para UX local.
 
-```bash
-npm run build
-```
+## Validaciones Ejecutadas
 
-Ejecutar tests:
+Validaciones ejecutadas sobre el frontend actual:
 
-```bash
-npm test
-```
+- `npm run build`
+- `npm test`
+- `docker compose config`
+- `docker compose build`
 
-## Git
+## Control De Versiones
 
-Repositorio remoto configurado:
+Repositorio remoto:
 
-```bash
-https://github.com/Tonyreng/AnthonyR-frontend-technical-test-Lexco.git
-```
+- `https://github.com/Tonyreng/AnthonyR-frontend-technical-test-Lexco.git`
 
-Aplicar Gitflow con ramas `main`, `develop` y `feature/*`.
+Flujo configurado:
+
+- `main`
+- `develop`
+- `feature/*`
+
+Tags publicados actualmente:
+
+- `v0.1.0-frontend-initial-setup`
+- `v0.2.0-backend-contract-interfaces`
+
+## Estado Actual
+
+Hitos implementados actualmente:
+
+- Inicializacion del proyecto Angular 21.
+- Configuracion Docker con hot reload.
+- Integracion base con PrimeNG y SCSS.
+- Guards e interceptor de credenciales.
+- Estructura lazy-loaded de features.
+- Tipado TypeScript del contrato actual del backend.
