@@ -1,0 +1,219 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  color: #18324f;
+}
+
+.register-shell {
+  min-height: 100dvh;
+  padding: 3rem 1.25rem;
+}
+
+.register-hero {
+  width: min(100%, 38rem);
+  margin: 0 auto;
+}
+
+.register-hero__header {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register-hero__brand {
+  margin: 0;
+  color: #0f7654;
+  font-size: clamp(2.25rem, 6vw, 3.3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-family: 'Avenir Next', 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+.register-hero__title {
+  margin: 0;
+  color: #3f4d4b;
+  font-size: clamp(1.6rem, 4vw, 2.15rem);
+  font-weight: 700;
+}
+
+.register-hero__subtitle {
+  max-width: 32rem;
+  margin: 0;
+  color: #647075;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.register-card {
+  padding: clamp(1.75rem, 4vw, 3rem);
+  border-radius: 1.35rem;
+  border: 1px solid rgba(15, 118, 84, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 24px 48px rgba(15, 23, 42, 0.08),
+    0 3px 12px rgba(15, 118, 84, 0.06);
+}
+
+.register-form {
+  display: grid;
+  gap: 1.3rem;
+}
+
+.register-form__group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.register-form__label {
+  color: #22324d;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.register-form__input {
+  width: 100%;
+  min-height: 3.7rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid #c7d6d1;
+  border-radius: 0.85rem;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 1.05rem;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.register-form__input:hover {
+  border-color: #9dbfb4;
+}
+
+.register-form__input:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+  outline: none;
+}
+
+.register-form__input.is-invalid {
+  border-color: rgba(180, 35, 24, 0.4);
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.08);
+}
+
+.register-form__rules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem 0.85rem;
+  margin: 0.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.register-form__rules li {
+  position: relative;
+  padding-left: 1.15rem;
+  color: #748089;
+  font-size: 0.84rem;
+}
+
+.register-form__rules li::before {
+  content: '';
+  position: absolute;
+  top: 0.38rem;
+  left: 0;
+  width: 0.46rem;
+  height: 0.46rem;
+  border-radius: 999px;
+  background: #c7d2d9;
+}
+
+.register-form__rules li.is-valid {
+  color: #0f766e;
+}
+
+.register-form__rules li.is-valid::before {
+  background: #0f766e;
+}
+
+.register-form__error {
+  color: #b42318;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.register-form__alert {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(180, 35, 24, 0.16);
+  border-radius: 0.9rem;
+  background: #fff4f2;
+  color: #912018;
+  font-size: 0.92rem;
+}
+
+.register-form__submit {
+  justify-content: center;
+  width: 100%;
+  min-height: 3.25rem;
+  margin-top: 0.4rem;
+  border: 0;
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, #0f7a52 0%, #0d6c49 100%);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 18px 30px rgba(15, 118, 84, 0.16);
+}
+
+.register-form__submit:enabled:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+}
+
+.register-form__submit:enabled:active {
+  transform: translateY(0);
+}
+
+.register-form__submit:disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.register-form__submit-icon {
+  margin-right: 0.55rem;
+}
+
+.register-card__footer {
+  margin: 1.85rem 0 0;
+  text-align: center;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+.register-card__footer a {
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.register-card__footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .register-shell {
+    padding: 2rem 1rem;
+  }
+
+  .register-card {
+    padding: 1.4rem;
+  }
+
+  .register-form__rules {
+    grid-template-columns: 1fr;
+  }
+}

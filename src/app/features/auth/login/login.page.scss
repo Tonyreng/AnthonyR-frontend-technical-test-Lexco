@@ -1,0 +1,229 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  color: #18324f;
+}
+
+.login-shell {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 2.5rem 1rem;
+}
+
+.login-card {
+  width: min(100%, 34rem);
+  padding: clamp(1.8rem, 4vw, 2.5rem);
+  border-radius: 1.35rem;
+  overflow: hidden;
+  border: 1px solid rgba(15, 118, 84, 0.1);
+  box-shadow:
+    0 24px 48px rgba(15, 23, 42, 0.08),
+    0 3px 12px rgba(15, 118, 84, 0.06);
+  position: relative;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 0.5rem;
+  background: linear-gradient(90deg, #0f7a52 0%, #64d9aa 100%);
+}
+
+.login-card__header {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: 2.3rem;
+}
+
+.login-card__brand {
+  margin: 0;
+  color: #0f7654;
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-family: 'Avenir Next', 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+.login-card__title {
+  margin: 0;
+  color: #475257;
+  font-size: clamp(1.4rem, 3vw, 1.95rem);
+  font-weight: 500;
+}
+
+.login-form {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.login-form__group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.login-form__label {
+  color: #1f2f46;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.login-form__field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.75rem;
+  padding: 0 1rem;
+  border: 1px solid #c6d4cf;
+  border-radius: 0.85rem;
+  background: #f7f9fd;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.login-form__field:hover {
+  border-color: #9fbeb3;
+}
+
+.login-form__field:focus-within {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+}
+
+.login-form__field.is-invalid {
+  border-color: rgba(180, 35, 24, 0.4);
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.08);
+}
+
+.login-form__icon {
+  color: #7a8681;
+  font-size: 1.35rem;
+}
+
+.login-form__input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #243142;
+  font-size: 1.05rem;
+  padding: 0;
+}
+
+.login-form__input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.login-form__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.login-form__toggle:hover {
+  background: rgba(15, 118, 110, 0.08);
+  color: #0f766e;
+}
+
+.login-form__toggle:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.4);
+  outline-offset: 2px;
+}
+
+.login-form__error {
+  color: #b42318;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.login-form__alert {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(180, 35, 24, 0.16);
+  border-radius: 0.9rem;
+  background: #fff4f2;
+  color: #912018;
+  font-size: 0.92rem;
+}
+
+.login-form__submit {
+  justify-content: center;
+  width: 100%;
+  min-height: 3.35rem;
+  margin-top: 0.45rem;
+  border: 0;
+  border-radius: 0.9rem;
+  background: linear-gradient(180deg, #0f7a52 0%, #0d6c49 100%);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 18px 30px rgba(15, 118, 84, 0.16);
+}
+
+.login-form__submit:enabled:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+}
+
+.login-form__submit:enabled:active {
+  transform: translateY(0);
+}
+
+.login-form__submit:disabled {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.login-form__submit-icon {
+  margin-left: 0.45rem;
+}
+
+.login-card__divider {
+  width: 100%;
+  height: 1px;
+  margin: 2rem 0 1.3rem;
+  background: rgba(148, 163, 184, 0.24);
+}
+
+.login-card__footer {
+  margin: 0;
+  text-align: center;
+  color: #475257;
+  font-size: 1rem;
+}
+
+.login-card__footer a {
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-card__footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .login-shell {
+    padding: 2rem 1rem;
+  }
+
+  .login-card {
+    padding: 1.45rem;
+  }
+}
