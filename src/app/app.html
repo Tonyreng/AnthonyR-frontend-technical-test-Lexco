@@ -3,12 +3,30 @@
     <span class="app-header__brand">GestionPro</span>
 
     @if (isPrivatePage()) {
-      <button type="button" class="app-header__logout" aria-label="Cerrar sesión" title="Cerrar sesión">
-        <i class="pi pi-sign-out" aria-hidden="true"></i>
+      <button
+        type="button"
+        class="app-header__logout"
+        aria-label="Cerrar sesión"
+        title="Cerrar sesión"
+        [disabled]="isLoggingOut()"
+        (click)="logout()"
+      >
+        @if (isLoggingOut()) {
+          <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+        } @else {
+          <i class="pi pi-sign-out" aria-hidden="true"></i>
+        }
       </button>
     }
   </div>
 </header>
+
+@if (logoutError(); as error) {
+  <div class="app-header__alert" role="alert" aria-live="polite">
+    <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+    <span>{{ error }}</span>
+  </div>
+}
 
 <div class="app-layout" [class.app-layout--private]="isPrivatePage()" [class.app-layout--collapsed]="isSidebarCollapsed()">
   @if (isPrivatePage()) {

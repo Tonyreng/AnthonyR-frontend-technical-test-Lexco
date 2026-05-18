@@ -69,6 +69,8 @@ export class RegisterPage {
   readonly submitAttempted = signal(false);
   readonly generalError = signal<string | null>(null);
   readonly passwordValue = signal('');
+  readonly isPasswordVisible = signal(false);
+  readonly isPasswordConfirmationVisible = signal(false);
 
   readonly registerForm = this.formBuilder.group(
     {
@@ -99,6 +101,14 @@ export class RegisterPage {
     this.watchFieldChanges('email');
     this.watchFieldChanges('password');
     this.watchFieldChanges('password_confirmation');
+  }
+
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible.update((visible) => !visible);
+  }
+
+  togglePasswordConfirmationVisibility(): void {
+    this.isPasswordConfirmationVisible.update((visible) => !visible);
   }
 
   onSubmit(): void {

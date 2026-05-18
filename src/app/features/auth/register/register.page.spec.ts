@@ -78,6 +78,31 @@ describe('RegisterPage', () => {
     expect(validRules.length).toBe(5);
   });
 
+  it('toggles password and confirmation visibility', () => {
+    const passwordInput = getPasswordInput();
+    const confirmationInput = getPasswordConfirmationInput();
+    const [passwordToggle, confirmationToggle] = Array.from(
+      fixture.nativeElement.querySelectorAll('.register-form__toggle'),
+    ) as HTMLButtonElement[];
+
+    expect(passwordInput.type).toBe('password');
+    expect(confirmationInput.type).toBe('password');
+
+    passwordToggle.click();
+    confirmationToggle.click();
+    fixture.detectChanges();
+
+    expect(getPasswordInput().type).toBe('text');
+    expect(getPasswordConfirmationInput().type).toBe('text');
+
+    passwordToggle.click();
+    confirmationToggle.click();
+    fixture.detectChanges();
+
+    expect(getPasswordInput().type).toBe('password');
+    expect(getPasswordConfirmationInput().type).toBe('password');
+  });
+
   it('submits valid registration data without sending role and redirects admins', () => {
     const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
     authService.register.mockReturnValue(of(adminUser));
@@ -164,5 +189,13 @@ describe('RegisterPage', () => {
 
   function getFormElement(): HTMLFormElement {
     return fixture.nativeElement.querySelector('form') as HTMLFormElement;
+  }
+
+  function getPasswordInput(): HTMLInputElement {
+    return fixture.nativeElement.querySelector('#password') as HTMLInputElement;
+  }
+
+  function getPasswordConfirmationInput(): HTMLInputElement {
+    return fixture.nativeElement.querySelector('#password_confirmation') as HTMLInputElement;
   }
 });

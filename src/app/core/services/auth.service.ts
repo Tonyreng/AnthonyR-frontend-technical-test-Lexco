@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { LoginPayload, RegisterPayload, User, AuthUserResponse } from '../models/user';
@@ -49,9 +49,14 @@ export class AuthService {
   logout(): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/auth/logout`, {}).pipe(
       tap(() => this.currentUser.set(null)),
-      catchError(() => {
-        this.currentUser.set(null);
-        return of(undefined);
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.currentUser.set(null);
+
+          return of(undefined);
+        }
+
+        return throwError(() => error);
       }),
     );
   }

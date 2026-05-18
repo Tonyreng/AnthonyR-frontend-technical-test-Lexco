@@ -1,6 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
+import { of, throwError } from 'rxjs';
+import { Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { App } from './app';
 import { User } from './core/models';
@@ -10,7 +13,10 @@ import { AuthService } from './core/services/auth.service';
 class EmptyRouteComponent {}
 
 describe('App', () => {
-  let authService: { user: ReturnType<typeof signal<User | null>> };
+  let authService: {
+    user: ReturnType<typeof signal<User | null>>;
+    logout: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(async () => {
     authService = {
@@ -22,6 +28,7 @@ describe('App', () => {
         created_at: '2026-05-17T00:00:00.000000Z',
         updated_at: '2026-05-17T00:00:00.000000Z',
       }),
+      logout: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -71,6 +78,20 @@ describe('App', () => {
     expect(compiled.querySelector('.app-sidebar')).toBeFalsy();
   });
 
+  it('does not render private navigation on initial auth page refresh', () => {
+    const location = TestBed.inject(Location);
+
+    location.go('/auth/login');
+
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('.app-header__logout')).toBeFalsy();
+    expect(compiled.querySelector('.app-sidebar')).toBeFalsy();
+  });
+
   it('renders logout and sidebar on private pages', async () => {
     const router = TestBed.inject(Router);
     const fixture = TestBed.createComponent(App);
@@ -107,5 +128,51 @@ describe('App', () => {
 
     expect(compiled.querySelector('.app-sidebar--collapsed')).toBeFalsy();
     expect(compiled.querySelector('.app-sidebar__collapse')).toBeTruthy();
+  });
+
+  it('logs out and redirects authenticated users to login', async () => {
+    const router = TestBed.inject(Router);
+    const fixture = TestBed.createComponent(App);
+    const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    authService.logout.mockReturnValue(of(undefined));
+
+    await router.navigateByUrl('/catalog');
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.app-header__logout') as HTMLButtonElement).click();
+
+    expect(authService.logout).toHaveBeenCalledTimes(1);
+    expect(navigateSpy).toHaveBeenCalledWith('/auth/login');
+  });
+
+  it('redirects to login when logout resolves after a 401', async () => {
+    const router = TestBed.inject(Router);
+    const fixture = TestBed.createComponent(App);
+    const navigateSpy = vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
+
+    authService.logout.mockReturnValue(of(undefined));
+
+    await router.navigateByUrl('/catalog');
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.app-header__logout') as HTMLButtonElement).click();
+
+    expect(navigateSpy).toHaveBeenCalledWith('/auth/login');
+  });
+
+  it('shows an error message when logout fails unexpectedly', async () => {
+    const router = TestBed.inject(Router);
+    const fixture = TestBed.createComponent(App);
+
+    authService.logout.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 500 })));
+
+    await router.navigateByUrl('/catalog');
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('.app-header__logout') as HTMLButtonElement).click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).toContain('No pudimos cerrar tu sesión en este momento.');
   });
 });
