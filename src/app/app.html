@@ -1,1 +1,59 @@
-<router-outlet />
+<header class="app-header">
+  <div class="app-header__inner">
+    <span class="app-header__brand">GestionPro</span>
+
+    @if (isPrivatePage()) {
+      <button type="button" class="app-header__logout" aria-label="Cerrar sesión" title="Cerrar sesión">
+        <i class="pi pi-sign-out" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+</header>
+
+<div class="app-layout" [class.app-layout--private]="isPrivatePage()" [class.app-layout--collapsed]="isSidebarCollapsed()">
+  @if (isPrivatePage()) {
+    <aside class="app-sidebar" [class.app-sidebar--collapsed]="isSidebarCollapsed()" aria-label="Navegación principal">
+      @if (isSidebarCollapsed()) {
+        <button type="button" class="app-sidebar__open" (click)="toggleSidebar()" aria-label="Desplegar menú lateral">
+          <i class="pi pi-angle-right" aria-hidden="true"></i>
+        </button>
+      } @else {
+        <div class="app-sidebar__profile">
+          <div class="app-sidebar__avatar" aria-hidden="true">
+            {{ sidebarUser()?.name?.charAt(0) || 'G' }}
+          </div>
+          <div class="app-sidebar__identity">
+            <strong>{{ sidebarUser()?.name || 'GestionPro' }}</strong>
+            <span>{{ sidebarUser()?.email || 'admin@gestionpro.com' }}</span>
+          </div>
+          <button type="button" class="app-sidebar__collapse" (click)="toggleSidebar()" aria-label="Guardar menú lateral">
+            <i class="pi pi-angle-left" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <nav class="app-sidebar__nav">
+          <a routerLink="/admin" class="app-sidebar__link app-sidebar__link--active">
+            <i class="pi pi-th-large" aria-hidden="true"></i>
+            <span>Dashboard</span>
+          </a>
+          <a routerLink="/admin/profile" class="app-sidebar__link">
+            <i class="pi pi-cog" aria-hidden="true"></i>
+            <span>Perfil</span>
+          </a>
+          <a routerLink="/admin/products" class="app-sidebar__link">
+            <i class="pi pi-chart-bar" aria-hidden="true"></i>
+            <span>Reportes</span>
+          </a>
+          <a routerLink="/catalog" class="app-sidebar__link">
+            <i class="pi pi-question-circle" aria-hidden="true"></i>
+            <span>Ayuda</span>
+          </a>
+        </nav>
+      }
+    </aside>
+  }
+
+  <main class="app-layout__content">
+    <router-outlet />
+  </main>
+</div>
