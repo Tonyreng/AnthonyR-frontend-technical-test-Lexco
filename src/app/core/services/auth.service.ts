@@ -3,8 +3,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { ApiResponse } from '../models/api-response';
-import { LoginPayload, RegisterPayload, User } from '../models/user';
+import { LoginPayload, RegisterPayload, User, AuthUserResponse } from '../models/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -17,15 +16,15 @@ export class AuthService {
   readonly isAdmin = computed(() => this.currentUser()?.role === 'admin');
 
   login(payload: LoginPayload): Observable<User> {
-    return this.http.post<ApiResponse<User>>(`${this.apiUrl}/auth/login`, payload).pipe(
-      map((response) => response.data),
+    return this.http.post<AuthUserResponse>(`${this.apiUrl}/auth/login`, payload).pipe(
+      map((response) => response.data.user),
       tap((user) => this.currentUser.set(user)),
     );
   }
 
   register(payload: RegisterPayload): Observable<User> {
-    return this.http.post<ApiResponse<User>>(`${this.apiUrl}/auth/register`, payload).pipe(
-      map((response) => response.data),
+    return this.http.post<AuthUserResponse>(`${this.apiUrl}/auth/register`, payload).pipe(
+      map((response) => response.data.user),
       tap((user) => this.currentUser.set(user)),
     );
   }
@@ -37,8 +36,8 @@ export class AuthService {
       return of(user);
     }
 
-    return this.http.get<ApiResponse<User>>(`${this.apiUrl}/auth/me`).pipe(
-      map((response) => response.data),
+    return this.http.get<AuthUserResponse>(`${this.apiUrl}/auth/me`).pipe(
+      map((response) => response.data.user),
       tap((loadedUser) => this.currentUser.set(loadedUser)),
       catchError(() => {
         this.currentUser.set(null);
