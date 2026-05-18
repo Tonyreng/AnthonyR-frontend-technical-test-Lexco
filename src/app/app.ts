@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -15,8 +16,9 @@ import { AuthService } from './core/services/auth.service';
 })
 export class App {
   private readonly router = inject(Router);
+  private readonly location = inject(Location);
   protected readonly authService = inject(AuthService);
-  private readonly currentUrl = signal(this.router.url);
+  private readonly currentUrl = signal(this.location.path() || this.router.url);
 
   protected readonly isSidebarCollapsed = signal(false);
   protected readonly isLoggingOut = signal(false);

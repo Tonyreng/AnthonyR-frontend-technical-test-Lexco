@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { App } from './app';
@@ -69,6 +70,20 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
 
     await router.navigateByUrl('/auth/login');
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    expect(compiled.querySelector('.app-header__logout')).toBeFalsy();
+    expect(compiled.querySelector('.app-sidebar')).toBeFalsy();
+  });
+
+  it('does not render private navigation on initial auth page refresh', () => {
+    const location = TestBed.inject(Location);
+
+    location.go('/auth/login');
+
+    const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
