@@ -2,14 +2,14 @@ import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { finalize, filter } from 'rxjs';
 
 import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +25,20 @@ export class App {
   protected readonly logoutError = signal<string | null>(null);
   protected readonly isPrivatePage = computed(() => !this.currentUrl().startsWith('/auth'));
   protected readonly sidebarUser = computed(() => this.authService.user());
+  protected readonly isAdminUser = computed(() => this.sidebarUser()?.role === 'admin');
+  protected readonly sidebarRoleLabel = computed(() => {
+    const role = this.sidebarUser()?.role;
+
+    if (role === 'admin') {
+      return 'Administrador';
+    }
+
+    if (role === 'user') {
+      return 'Usuario';
+    }
+
+    return null;
+  });
 
   constructor() {
     this.router.events

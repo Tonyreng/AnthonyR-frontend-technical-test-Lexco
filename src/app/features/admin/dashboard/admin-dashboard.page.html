@@ -1,0 +1,91 @@
+<main class="dashboard-shell page-shell">
+  <section class="dashboard-intro">
+    <p class="eyebrow">Admin</p>
+    <h1 class="dashboard-intro__title">Resumen del sistema</h1>
+    <p class="dashboard-intro__subtitle muted">Vista general de actividad y métricas clave.</p>
+  </section>
+
+  <section class="dashboard-section" aria-labelledby="dashboard-metrics-title">
+    <h2 id="dashboard-metrics-title" class="dashboard-section__title">Indicadores principales</h2>
+
+    <div class="dashboard-grid dashboard-grid--metrics">
+      <article class="dashboard-card dashboard-card--metric" [class.dashboard-card--error]="usersMetric().error" aria-labelledby="users-total-title">
+        <div class="dashboard-card__head">
+          <div>
+            <p id="users-total-title" class="dashboard-card__eyebrow">Total usuarios</p>
+          </div>
+          <span class="dashboard-card__icon dashboard-card__icon--users" aria-hidden="true">
+            <i class="pi pi-users"></i>
+          </span>
+        </div>
+
+        @if (usersMetric().loading) {
+          <div class="dashboard-skeleton" aria-label="Cargando total de usuarios">
+            <span class="dashboard-skeleton__line dashboard-skeleton__line--value"></span>
+            <span class="dashboard-skeleton__line dashboard-skeleton__line--meta"></span>
+          </div>
+        } @else if (usersMetric().error; as error) {
+          <p class="dashboard-card__error">{{ error }}</p>
+        } @else {
+          <p class="dashboard-card__value" id="dashboard-users-total">{{ formatTotal(usersMetric().total) }}</p>
+          <p class="dashboard-card__meta">Usuarios registrados actualmente</p>
+        }
+      </article>
+
+      <article class="dashboard-card dashboard-card--metric" [class.dashboard-card--error]="productsMetric().error" aria-labelledby="products-total-title">
+        <div class="dashboard-card__head">
+          <div>
+            <p id="products-total-title" class="dashboard-card__eyebrow">Total productos</p>
+          </div>
+          <span class="dashboard-card__icon dashboard-card__icon--products" aria-hidden="true">
+            <i class="pi pi-box"></i>
+          </span>
+        </div>
+
+        @if (productsMetric().loading) {
+          <div class="dashboard-skeleton" aria-label="Cargando total de productos">
+            <span class="dashboard-skeleton__line dashboard-skeleton__line--value"></span>
+            <span class="dashboard-skeleton__line dashboard-skeleton__line--meta"></span>
+          </div>
+        } @else if (productsMetric().error; as error) {
+          <p class="dashboard-card__error">{{ error }}</p>
+        } @else {
+          <p class="dashboard-card__value" id="dashboard-products-total">{{ formatTotal(productsMetric().total) }}</p>
+          <p class="dashboard-card__meta">Productos disponibles en gestión</p>
+        }
+      </article>
+    </div>
+  </section>
+
+  <section class="dashboard-section" aria-labelledby="dashboard-shortcuts-title">
+    <h2 id="dashboard-shortcuts-title" class="dashboard-section__title">Accesos directos</h2>
+
+    <div class="dashboard-grid dashboard-grid--shortcuts">
+      <a class="dashboard-card dashboard-card--shortcut" routerLink="/admin/users">
+        <span class="dashboard-shortcut__icon" aria-hidden="true">
+          <i class="pi pi-user-plus"></i>
+        </span>
+        <span class="dashboard-shortcut__content">
+          <span class="dashboard-shortcut__title">Gestión de usuarios</span>
+          <span class="dashboard-shortcut__description">Añadir, editar o eliminar cuentas de usuario.</span>
+        </span>
+        <span class="dashboard-shortcut__arrow" aria-hidden="true">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+
+      <a class="dashboard-card dashboard-card--shortcut" routerLink="/admin/products">
+        <span class="dashboard-shortcut__icon dashboard-shortcut__icon--violet" aria-hidden="true">
+          <i class="pi pi-box"></i>
+        </span>
+        <span class="dashboard-shortcut__content">
+          <span class="dashboard-shortcut__title">Gestión de productos</span>
+          <span class="dashboard-shortcut__description">Actualizar inventario, precios y categorías.</span>
+        </span>
+        <span class="dashboard-shortcut__arrow" aria-hidden="true">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+    </div>
+  </section>
+</main>

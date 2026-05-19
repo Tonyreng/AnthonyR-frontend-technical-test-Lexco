@@ -36,7 +36,12 @@ describe('App', () => {
       providers: [
         provideRouter([
           { path: 'auth/login', component: EmptyRouteComponent },
+          { path: 'admin', component: EmptyRouteComponent },
+          { path: 'admin/users', component: EmptyRouteComponent },
+          { path: 'admin/products', component: EmptyRouteComponent },
+          { path: 'admin/profile', component: EmptyRouteComponent },
           { path: 'catalog', component: EmptyRouteComponent },
+          { path: 'cart', component: EmptyRouteComponent },
         ]),
         { provide: AuthService, useValue: authService },
       ],
@@ -104,6 +109,16 @@ describe('App', () => {
     expect(compiled.querySelector('.app-header__logout')).toBeTruthy();
     expect(compiled.querySelector('.app-sidebar')).toBeTruthy();
     expect(compiled.querySelector('.app-sidebar__link')?.textContent).toContain('Dashboard');
+  });
+
+  it('shows the authenticated user role in the sidebar', async () => {
+    const router = TestBed.inject(Router);
+    const fixture = TestBed.createComponent(App);
+
+    await router.navigateByUrl('/admin');
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.app-sidebar__role')?.textContent).toContain('Administrador');
   });
 
   it('collapses and expands the private sidebar', async () => {
