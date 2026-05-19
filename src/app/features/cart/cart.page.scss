@@ -1,0 +1,166 @@
+:host {
+  display: block;
+}
+
+.cart-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.cart-toolbar,
+.cart-item,
+.cart-item__controls,
+.cart-item__totals {
+  display: flex;
+  align-items: center;
+}
+
+.cart-toolbar {
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cart-toolbar h1,
+.cart-state h2,
+.cart-item h2,
+.cart-summary h2 {
+  margin: 0;
+  color: #18253d;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+  gap: 1rem;
+  align-items: start;
+}
+
+.cart-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.cart-item {
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.cart-item p,
+.cart-item small,
+.cart-summary p {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+}
+
+.cart-item__category {
+  display: inline-flex;
+  margin-bottom: 0.45rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  background: #e5f1ee;
+  color: #0f7654;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cart-item__controls,
+.cart-item__totals {
+  gap: 0.7rem;
+}
+
+.cart-item__controls button {
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: #eef3f7;
+  color: #283747;
+  font-weight: 800;
+}
+
+.cart-item__totals {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.cart-primary-button,
+.cart-secondary-button,
+.cart-danger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.45rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.cart-primary-button {
+  background: #0f7654;
+  color: #fff;
+}
+
+.cart-secondary-button {
+  background: #eef3f7;
+  color: #283747;
+}
+
+.cart-danger-button {
+  background: #fff4f2;
+  color: #b42318;
+}
+
+.cart-summary {
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.cart-summary dl,
+.cart-summary dd {
+  margin: 0;
+}
+
+.cart-summary div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cart-summary dt {
+  color: #64748b;
+}
+
+.cart-summary dd {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.cart-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 860px) {
+  .cart-layout,
+  .cart-item,
+  .cart-toolbar {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .cart-item__totals {
+    align-items: flex-start;
+  }
+}
