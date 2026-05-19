@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -56,6 +56,11 @@ export class ProductManagementPage implements OnInit {
     category: '',
     in_stock: '' as '' | 'true' | 'false',
   });
+  private readonly filtersValue = toSignal(this.filtersForm.valueChanges, { initialValue: this.filtersForm.getRawValue() });
+  protected readonly hasActiveFilters = computed(() => {
+    const filters = this.filtersValue();
+    return Boolean((filters.search ?? '').trim() || (filters.category ?? '').trim() || filters.in_stock);
+  });
 
   protected readonly productForm = this.formBuilder.nonNullable.group({
     name: ['', [Validators.required]],
@@ -70,6 +75,11 @@ export class ProductManagementPage implements OnInit {
   }
 
   protected applyFilters(): void {
+    this.loadProducts(1);
+  }
+
+  protected clearFilters(): void {
+    this.filtersForm.reset({ search: '', category: '', in_stock: '' });
     this.loadProducts(1);
   }
 

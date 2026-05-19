@@ -95,6 +95,37 @@ describe('ProductManagementPage', () => {
     request.flush(productsResponse([productA]));
   });
 
+  it('clears active filters and reloads products without filter params', () => {
+    fixture.detectChanges();
+    expectProductsRequest().flush(productsResponse([productA, productB]));
+    fixture.detectChanges();
+
+    setFilterField('search', 'laptop');
+    setFilterField('category', 'electronics');
+    setStockFilter('true');
+
+    expectProductsRequest().flush(productsResponse([productA]));
+    fixture.detectChanges();
+
+    const clearButton = fixture.nativeElement.querySelector('.products-filters .products-secondary-button') as HTMLButtonElement;
+
+    expect(clearButton.disabled).toBe(false);
+
+    clearButton.click();
+
+    const request = expectProductsRequest();
+
+    expect(request.request.params.get('page')).toBe('1');
+    expect(request.request.params.get('search')).toBeNull();
+    expect(request.request.params.get('category')).toBeNull();
+    expect(request.request.params.get('in_stock')).toBeNull();
+    expect((fixture.nativeElement.querySelector('.products-filters [formcontrolname="search"]') as HTMLInputElement).value).toBe('');
+    expect((fixture.nativeElement.querySelector('.products-filters [formcontrolname="category"]') as HTMLInputElement).value).toBe('');
+    expect((fixture.nativeElement.querySelector('.products-filters [formcontrolname="in_stock"]') as HTMLSelectElement).value).toBe('');
+
+    request.flush(productsResponse([productA, productB]));
+  });
+
   it('creates a product and refreshes the list', () => {
     fixture.detectChanges();
     expectProductsRequest().flush(productsResponse([productA]));
