@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { UserListQuery, UsersResponse } from '../models/user';
+import { CreateUserPayload, UpdateUserPayload, UserListQuery, UserResponse, UsersResponse } from '../models/user';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
@@ -14,6 +14,18 @@ export class UsersService {
     return this.http.get<UsersResponse>(`${this.apiUrl}/users`, {
       params: this.buildParams(query),
     });
+  }
+
+  create(payload: CreateUserPayload): Observable<UserResponse> {
+    return this.http.post<UserResponse>(`${this.apiUrl}/users`, payload);
+  }
+
+  update(userId: number, payload: UpdateUserPayload): Observable<UserResponse> {
+    return this.http.patch<UserResponse>(`${this.apiUrl}/users/${userId}`, payload);
+  }
+
+  delete(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/users/${userId}`);
   }
 
   private buildParams(query: UserListQuery): HttpParams {
