@@ -1,0 +1,239 @@
+:host {
+  display: block;
+}
+
+.dashboard-shell {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.dashboard-intro__title {
+  margin: 0;
+  color: #18253d;
+  font-size: clamp(2rem, 3vw, 2.45rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.dashboard-intro__subtitle {
+  margin: 0.55rem 0 0;
+  font-size: 1rem;
+}
+
+.dashboard-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.dashboard-section__title {
+  margin: 0;
+  color: #18253d;
+  font-size: 1.55rem;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.dashboard-grid--metrics,
+.dashboard-grid--shortcuts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-card {
+  position: relative;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 250, 255, 0.96) 100%),
+    #ffffff;
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.07);
+}
+
+.dashboard-card--metric {
+  min-height: 13rem;
+  padding: 1.3rem 1.35rem 1.45rem;
+}
+
+.dashboard-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.dashboard-card__eyebrow {
+  margin: 0;
+  color: #526071;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.dashboard-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 999px;
+  background: #e3f3eb;
+  color: #0f7654;
+}
+
+.dashboard-card__icon--products {
+  background: #dfe8fb;
+  color: #4a5f8f;
+}
+
+.dashboard-card__value {
+  margin: 1rem 0 0.35rem;
+  color: #15253c;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.dashboard-card__meta {
+  margin: 0;
+  color: #5f6c7e;
+  font-size: 0.94rem;
+}
+
+.dashboard-card--error {
+  border-color: rgba(180, 35, 24, 0.16);
+  background: linear-gradient(180deg, #ffffff 0%, #fff8f7 100%);
+}
+
+.dashboard-card__error {
+  margin: 1rem 0 0;
+  color: #912018;
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+
+.dashboard-skeleton {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.dashboard-skeleton__line {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.18);
+}
+
+.dashboard-skeleton__line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.72) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: dashboard-shimmer 1.2s infinite;
+}
+
+.dashboard-skeleton__line--value {
+  width: 9rem;
+  max-width: 60%;
+  height: 2.2rem;
+}
+
+.dashboard-skeleton__line--meta {
+  width: 12rem;
+  max-width: 85%;
+  height: 0.95rem;
+}
+
+.dashboard-card--shortcut {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.95rem;
+  min-height: 5.8rem;
+  padding: 1rem 1.15rem;
+  text-decoration: none;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+
+.dashboard-card--shortcut:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.16);
+  box-shadow: 0 24px 50px rgba(37, 99, 235, 0.12);
+}
+
+.dashboard-shortcut__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.8rem;
+  background: #dfeafc;
+  color: #1f5fa7;
+}
+
+.dashboard-shortcut__icon--violet {
+  background: #e4e6ff;
+  color: #5a5fc8;
+}
+
+.dashboard-shortcut__content {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.dashboard-shortcut__title {
+  color: #17253e;
+  font-size: 1.04rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.dashboard-shortcut__description {
+  color: #5c6a7c;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.dashboard-shortcut__arrow {
+  color: #a3ae89;
+  font-size: 1.15rem;
+}
+
+@keyframes dashboard-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid--metrics,
+  .dashboard-grid--shortcuts {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-card--metric {
+    min-height: 11.75rem;
+  }
+
+  .dashboard-card--shortcut {
+    grid-template-columns: auto 1fr;
+  }
+
+  .dashboard-shortcut__arrow {
+    display: none;
+  }
+}

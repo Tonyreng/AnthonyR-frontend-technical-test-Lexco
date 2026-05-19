@@ -43,6 +43,9 @@
           <div class="app-sidebar__identity">
             <strong>{{ sidebarUser()?.name || 'GestionPro' }}</strong>
             <span>{{ sidebarUser()?.email || 'admin@gestionpro.com' }}</span>
+            @if (sidebarRoleLabel(); as roleLabel) {
+              <small class="app-sidebar__role">{{ roleLabel }}</small>
+            }
           </div>
           <button type="button" class="app-sidebar__collapse" (click)="toggleSidebar()" aria-label="Guardar menú lateral">
             <i class="pi pi-angle-left" aria-hidden="true"></i>
@@ -50,22 +53,43 @@
         </div>
 
         <nav class="app-sidebar__nav">
-          <a routerLink="/admin" class="app-sidebar__link app-sidebar__link--active">
-            <i class="pi pi-th-large" aria-hidden="true"></i>
-            <span>Dashboard</span>
-          </a>
-          <a routerLink="/admin/profile" class="app-sidebar__link">
-            <i class="pi pi-cog" aria-hidden="true"></i>
-            <span>Perfil</span>
-          </a>
-          <a routerLink="/admin/products" class="app-sidebar__link">
-            <i class="pi pi-chart-bar" aria-hidden="true"></i>
-            <span>Reportes</span>
-          </a>
-          <a routerLink="/catalog" class="app-sidebar__link">
-            <i class="pi pi-question-circle" aria-hidden="true"></i>
-            <span>Ayuda</span>
-          </a>
+          @if (isAdminUser()) {
+            <a
+              routerLink="/admin"
+              class="app-sidebar__link"
+              routerLinkActive="app-sidebar__link--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <i class="pi pi-th-large" aria-hidden="true"></i>
+              <span>Dashboard</span>
+            </a>
+            <a routerLink="/admin/users" class="app-sidebar__link" routerLinkActive="app-sidebar__link--active">
+              <i class="pi pi-users" aria-hidden="true"></i>
+              <span>Usuarios</span>
+            </a>
+            <a routerLink="/admin/products" class="app-sidebar__link" routerLinkActive="app-sidebar__link--active">
+              <i class="pi pi-box" aria-hidden="true"></i>
+              <span>Productos</span>
+            </a>
+            <a routerLink="/admin/profile" class="app-sidebar__link" routerLinkActive="app-sidebar__link--active">
+              <i class="pi pi-cog" aria-hidden="true"></i>
+              <span>Perfil</span>
+            </a>
+          } @else {
+            <a
+              routerLink="/catalog"
+              class="app-sidebar__link"
+              routerLinkActive="app-sidebar__link--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <i class="pi pi-shop" aria-hidden="true"></i>
+              <span>Catálogo</span>
+            </a>
+            <a routerLink="/cart" class="app-sidebar__link" routerLinkActive="app-sidebar__link--active">
+              <i class="pi pi-shopping-cart" aria-hidden="true"></i>
+              <span>Carrito</span>
+            </a>
+          }
         </nav>
       }
     </aside>
