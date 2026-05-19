@@ -64,4 +64,8 @@ export class AuthService {
   clearSession(): void {
     this.currentUser.set(null);
   }
+
+  setCurrentUser(user: User | null): void {
+    this.currentUser.set(user);
+  }
 }
