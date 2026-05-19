@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -35,10 +35,11 @@ export class CatalogPage implements OnInit {
     search: '',
     category: '',
   });
+  private readonly filtersValue = toSignal(this.filtersForm.valueChanges, { initialValue: this.filtersForm.getRawValue() });
 
   protected readonly hasActiveFilters = computed(() => {
-    const filters = this.filtersForm.getRawValue();
-    return Boolean(filters.search.trim() || filters.category.trim());
+    const filters = this.filtersValue();
+    return Boolean((filters.search ?? '').trim() || (filters.category ?? '').trim());
   });
 
   ngOnInit(): void {

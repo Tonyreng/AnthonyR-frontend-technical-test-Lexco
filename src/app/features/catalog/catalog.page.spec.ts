@@ -95,6 +95,31 @@ describe('CatalogPage', () => {
     request.flush(catalogResponse([productA]));
   });
 
+  it('clears active filters and reloads the catalog without filter params', () => {
+    fixture.detectChanges();
+    expectCatalogRequest().flush(catalogResponse([productA, productB]));
+    fixture.detectChanges();
+
+    setFilterField('search', 'laptop');
+    setFilterField('category', 'electronics');
+
+    const clearButton = fixture.nativeElement.querySelector('.catalog-secondary-button') as HTMLButtonElement;
+
+    expect(clearButton.disabled).toBe(false);
+
+    clearButton.click();
+
+    const request = expectCatalogRequest();
+
+    expect(request.request.params.get('page')).toBe('1');
+    expect(request.request.params.get('search')).toBeNull();
+    expect(request.request.params.get('category')).toBeNull();
+    expect((fixture.nativeElement.querySelector('.catalog-filters [formcontrolname="search"]') as HTMLInputElement).value).toBe('');
+    expect((fixture.nativeElement.querySelector('.catalog-filters [formcontrolname="category"]') as HTMLInputElement).value).toBe('');
+
+    request.flush(catalogResponse([productA, productB]));
+  });
+
   it('adds products to the cart and prevents exceeding stock', () => {
     fixture.detectChanges();
     expectCatalogRequest().flush(catalogResponse([productA]));
