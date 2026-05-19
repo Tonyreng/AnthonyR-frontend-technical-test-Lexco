@@ -1,0 +1,132 @@
+:host {
+  display: block;
+}
+
+.products-stock-filter {
+  min-width: 9rem;
+}
+
+.product-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.product-card--out {
+  border-color: rgba(180, 35, 24, 0.2);
+}
+
+.product-card__head,
+.product-card__actions,
+.product-card__meta {
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.product-card__category,
+.product-card__stock {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.product-card__category {
+  background: #e5f1ee;
+  color: #0f7654;
+}
+
+.product-card__stock {
+  background: #dce8fb;
+  color: #31527d;
+}
+
+.product-card__stock--out,
+.product-card__action--danger,
+.products-danger-button {
+  background: #b42318;
+  color: #fff;
+}
+
+.product-card__content p,
+.products-detail__description {
+  margin: 0.35rem 0 0;
+  color: #516072;
+  line-height: 1.5;
+}
+
+.product-card__meta {
+  display: flex;
+  align-items: center;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.product-card__meta strong {
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.product-card__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #31423c;
+}
+
+.products-detail__meta {
+  display: grid;
+  gap: 1rem;
+}
+
+.products-detail__meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.products-detail__meta dt {
+  color: #64748b;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.products-detail__meta dd {
+  margin: 0.2rem 0 0;
+  color: #18253d;
+  font-weight: 700;
+}
+
+.products-detail__loading {
+  margin: 0;
+  color: #64748b;
+}
+
+.products-state--inline {
+  width: 100%;
+  margin: 0;
+}
+
+.product-card__line {
+  display: block;
+  height: 0.8rem;
+  background: #e8edf2;
+  border-radius: 999px;
+}
+
+.product-card__line--title {
+  width: 70%;
+}
+
+.product-card__line--meta {
+  width: 48%;
+}
