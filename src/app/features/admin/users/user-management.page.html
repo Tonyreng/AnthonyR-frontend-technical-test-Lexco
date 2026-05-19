@@ -23,6 +23,9 @@
       </label>
 
       <button type="submit" class="users-filter-button">Buscar</button>
+      <button type="button" class="users-secondary-button" (click)="clearFilters()" [disabled]="!hasActiveFilters()">
+        Limpiar
+      </button>
     </form>
   </section>
 

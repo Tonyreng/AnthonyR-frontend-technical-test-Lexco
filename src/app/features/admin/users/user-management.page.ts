@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -78,6 +78,11 @@ export class UserManagementPage implements OnInit {
     search: '',
     role: '' as Role | '',
   });
+  private readonly filtersValue = toSignal(this.filtersForm.valueChanges, { initialValue: this.filtersForm.getRawValue() });
+  protected readonly hasActiveFilters = computed(() => {
+    const filters = this.filtersValue();
+    return Boolean((filters.search ?? '').trim() || filters.role);
+  });
 
   protected readonly userForm = this.formBuilder.nonNullable.group(
     {
@@ -95,6 +100,11 @@ export class UserManagementPage implements OnInit {
   }
 
   protected applyFilters(): void {
+    this.loadUsers(1);
+  }
+
+  protected clearFilters(): void {
+    this.filtersForm.reset({ search: '', role: '' });
     this.loadUsers(1);
   }
 
