@@ -6,6 +6,7 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 import { finalize, filter } from 'rxjs';
 
 import { AuthService } from './core/services/auth.service';
+import { CartService } from './core/services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class App {
   private readonly router = inject(Router);
   private readonly location = inject(Location);
   protected readonly authService = inject(AuthService);
+  private readonly cartService = inject(CartService);
   private readonly currentUrl = signal(this.location.path() || this.router.url);
 
   protected readonly isSidebarCollapsed = signal(false);
@@ -26,6 +28,7 @@ export class App {
   protected readonly isPrivatePage = computed(() => !this.currentUrl().startsWith('/auth'));
   protected readonly sidebarUser = computed(() => this.authService.user());
   protected readonly isAdminUser = computed(() => this.sidebarUser()?.role === 'admin');
+  protected readonly cartItemCount = this.cartService.totalItems;
   protected readonly sidebarRoleLabel = computed(() => {
     const role = this.sidebarUser()?.role;
 

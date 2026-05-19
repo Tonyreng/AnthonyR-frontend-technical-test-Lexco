@@ -88,6 +88,9 @@
             <a routerLink="/cart" class="app-sidebar__link" routerLinkActive="app-sidebar__link--active">
               <i class="pi pi-shopping-cart" aria-hidden="true"></i>
               <span>Carrito</span>
+              @if (cartItemCount() > 0) {
+                <small class="app-sidebar__badge">{{ cartItemCount() }}</small>
+              }
             </a>
           }
         </nav>

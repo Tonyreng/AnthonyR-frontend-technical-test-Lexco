@@ -1,0 +1,60 @@
+<main class="cart-shell page-shell">
+  <section class="cart-toolbar page-card" aria-labelledby="cart-title">
+    <div>
+      <p class="eyebrow">Carrito</p>
+      <h1 id="cart-title">Carrito de compras</h1>
+      <p class="muted">Revisa cantidades, stock local y total estimado antes de comprar.</p>
+    </div>
+    <a class="cart-secondary-button" routerLink="/catalog">Volver al catálogo</a>
+  </section>
+
+  @if (items().length === 0) {
+    <section class="cart-state page-card">
+      <i class="pi pi-shopping-cart" aria-hidden="true"></i>
+      <h2>Tu carrito está vacío</h2>
+      <p>Agrega productos disponibles desde el catálogo para verlos aquí.</p>
+      <a class="cart-primary-button" routerLink="/catalog">Explorar catálogo</a>
+    </section>
+  } @else {
+    <section class="cart-layout">
+      <div class="cart-list" aria-label="Productos en carrito">
+        @for (item of items(); track item.product.id) {
+          <article class="cart-item page-card">
+            <div>
+              <span class="cart-item__category">{{ item.product.category }}</span>
+              <h2>{{ item.product.name }}</h2>
+              <p>{{ item.product.description }}</p>
+              <small>Stock disponible: {{ item.product.stock }}</small>
+            </div>
+
+            <div class="cart-item__controls" aria-label="Controles de cantidad">
+              <button type="button" (click)="decrement(item.product.id)" aria-label="Reducir cantidad">-</button>
+              <strong>{{ item.quantity }}</strong>
+              <button type="button" (click)="addOne(item.product.id)" [disabled]="item.quantity >= item.product.stock" aria-label="Aumentar cantidad">
+                +
+              </button>
+            </div>
+
+            <div class="cart-item__totals">
+              <span>{{ formatPrice(item.product.price) }} c/u</span>
+              <strong>{{ subtotal(item.product.price, item.quantity) }}</strong>
+              <button type="button" class="cart-danger-button" (click)="remove(item.product.id)">Quitar</button>
+            </div>
+          </article>
+        }
+      </div>
+
+      <aside class="cart-summary page-card" aria-label="Resumen del carrito">
+        <p class="eyebrow">Resumen</p>
+        <h2>{{ totalItems() }} productos</h2>
+        <dl>
+          <div>
+            <dt>Total estimado</dt>
+            <dd>{{ formatPrice(totalAmount()) }}</dd>
+          </div>
+        </dl>
+        <button type="button" class="cart-secondary-button" (click)="clear()">Vaciar carrito</button>
+      </aside>
+    </section>
+  }
+</main>

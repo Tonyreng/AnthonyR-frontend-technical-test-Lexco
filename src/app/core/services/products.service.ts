@@ -3,7 +3,15 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import { CreateProductPayload, ProductListQuery, ProductResponse, ProductsResponse, UpdateProductPayload } from '../models/product';
+import {
+  CatalogProductListQuery,
+  CatalogProductsResponse,
+  CreateProductPayload,
+  ProductListQuery,
+  ProductResponse,
+  ProductsResponse,
+  UpdateProductPayload,
+} from '../models/product';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsService {
@@ -12,6 +20,12 @@ export class ProductsService {
 
   list(query: ProductListQuery = {}): Observable<ProductsResponse> {
     return this.http.get<ProductsResponse>(`${this.apiUrl}/products`, {
+      params: this.buildParams(query),
+    });
+  }
+
+  listAvailable(query: CatalogProductListQuery = {}): Observable<CatalogProductsResponse> {
+    return this.http.get<CatalogProductsResponse>(`${this.apiUrl}/catalog/products`, {
       params: this.buildParams(query),
     });
   }
@@ -32,7 +46,7 @@ export class ProductsService {
     return this.http.delete<void>(`${this.apiUrl}/products/${productId}`);
   }
 
-  private buildParams(query: ProductListQuery): HttpParams {
+  private buildParams(query: ProductListQuery | CatalogProductListQuery): HttpParams {
     return Object.entries(query).reduce((params, [key, value]) => {
       if (value === undefined || value === null || value === '') {
         return params;

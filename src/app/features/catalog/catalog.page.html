@@ -1,0 +1,123 @@
+<main class="catalog-shell page-shell">
+  <section class="catalog-toolbar page-card" aria-labelledby="catalog-title">
+    <div>
+      <p class="eyebrow">Catalogo</p>
+      <h1 id="catalog-title">Productos disponibles</h1>
+      <p class="muted">Explora disponibilidad en tiempo real y agrega productos al carrito.</p>
+    </div>
+
+    <a class="catalog-cart-link" routerLink="/cart">
+      <i class="pi pi-shopping-cart" aria-hidden="true"></i>
+      <span>Ver carrito</span>
+      @if (cartItemCount() > 0) {
+        <small>{{ cartItemCount() }}</small>
+      }
+    </a>
+  </section>
+
+  <form class="catalog-filters page-card" [formGroup]="filtersForm" (ngSubmit)="applyFilters()" aria-label="Filtros del catálogo">
+    <label class="catalog-search">
+      <span class="sr-only">Buscar producto</span>
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <input type="search" formControlName="search" placeholder="Buscar producto..." />
+    </label>
+
+    <label class="catalog-category-filter">
+      <span class="sr-only">Filtrar por categoría</span>
+      <input type="text" formControlName="category" placeholder="Categoría" />
+    </label>
+
+    <button type="submit" class="catalog-filter-button">Buscar</button>
+    <button type="button" class="catalog-secondary-button" (click)="clearFilters()" [disabled]="!hasActiveFilters()">
+      Limpiar
+    </button>
+  </form>
+
+  @if (isLoading()) {
+    <section class="catalog-grid" aria-label="Cargando catálogo">
+      @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+        <article class="catalog-card catalog-card--skeleton page-card">
+          <span class="catalog-line catalog-line--tag"></span>
+          <span class="catalog-line catalog-line--title"></span>
+          <span class="catalog-line catalog-line--meta"></span>
+          <span class="catalog-line catalog-line--meta"></span>
+        </article>
+      }
+    </section>
+  } @else if (listError(); as error) {
+    <section class="catalog-state page-card" role="alert">
+      <i class="pi pi-exclamation-circle" aria-hidden="true"></i>
+      <h2>No pudimos cargar el catálogo</h2>
+      <p>{{ error }}</p>
+      <button type="button" class="catalog-secondary-button" (click)="applyFilters()">Reintentar</button>
+    </section>
+  } @else if (products().length === 0) {
+    <section class="catalog-state page-card">
+      <i class="pi pi-inbox" aria-hidden="true"></i>
+      <h2>No hay productos para mostrar</h2>
+      <p>Prueba con otra búsqueda o ajusta la categoría.</p>
+    </section>
+  } @else {
+    <section class="catalog-grid" aria-label="Listado de productos disponibles">
+      @for (product of products(); track product.id) {
+        <article class="catalog-card page-card" [class.catalog-card--out]="product.stock <= 0">
+          <div class="catalog-card__head">
+            <span class="catalog-card__category">{{ product.category }}</span>
+            <span class="catalog-card__stock" [class.catalog-card__stock--out]="product.stock <= 0">
+              {{ stockLabel(product.stock) }}
+            </span>
+          </div>
+
+          <div class="catalog-card__content">
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.description }}</p>
+          </div>
+
+          <div class="catalog-card__meta">
+            <strong>{{ formatPrice(product.price) }}</strong>
+            <small>Stock: {{ product.stock }}</small>
+          </div>
+
+          <div class="catalog-card__status-slot">
+            @if (cartQuantity(product.id) > 0) {
+              <p class="catalog-card__cart-state">En carrito: {{ cartQuantity(product.id) }} / {{ product.stock }}</p>
+            }
+
+            @if (feedbackMessages()[product.id]; as message) {
+              <p class="catalog-feedback" role="status">{{ message }}</p>
+            }
+          </div>
+
+          <button
+            type="button"
+            class="catalog-primary-button"
+            (click)="addToCart(product)"
+            [disabled]="product.stock <= 0 || cartQuantity(product.id) >= product.stock"
+          >
+            @if (product.stock <= 0) {
+              Sin stock
+            } @else if (cartQuantity(product.id) >= product.stock) {
+              Stock máximo
+            } @else if (cartQuantity(product.id) > 0) {
+              Agregar otra unidad
+            } @else {
+              Agregar al carrito
+            }
+          </button>
+        </article>
+      }
+    </section>
+
+    @if (pagination(); as meta) {
+      <nav class="catalog-pagination" aria-label="Paginación del catálogo">
+        <button type="button" (click)="goToPage(meta.current_page - 1)" [disabled]="meta.current_page <= 1 || isLoading()">
+          Anterior
+        </button>
+        <span>Página {{ meta.current_page }} de {{ meta.last_page }} · {{ meta.total }} productos</span>
+        <button type="button" (click)="goToPage(meta.current_page + 1)" [disabled]="meta.current_page >= meta.last_page || isLoading()">
+          Siguiente
+        </button>
+      </nav>
+    }
+  }
+</main>
