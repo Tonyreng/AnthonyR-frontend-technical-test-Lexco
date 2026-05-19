@@ -263,7 +263,7 @@ export class ProductManagementPage implements OnInit {
     this.productsService
       .list({
         page,
-        per_page: 9,
+        per_page: 12,
         search: filters.search.trim() || undefined,
         category: filters.category.trim() || undefined,
         in_stock: filters.in_stock || undefined,

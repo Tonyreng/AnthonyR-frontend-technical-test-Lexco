@@ -63,7 +63,7 @@ describe('UserManagementPage', () => {
     const request = expectUsersRequest();
 
     expect(request.request.params.get('page')).toBe('1');
-    expect(request.request.params.get('per_page')).toBe('6');
+    expect(request.request.params.get('per_page')).toBe('12');
 
     request.flush(usersResponse([adminUser, regularUser]));
     fixture.detectChanges();
@@ -241,7 +241,7 @@ describe('UserManagementPage', () => {
   function usersResponse(users: User[]) {
     return {
       data: users,
-      meta: { current_page: 1, per_page: 6, total: users.length, last_page: 1 },
+      meta: { current_page: 1, per_page: 12, total: users.length, last_page: 1 },
       message: 'Operation completed successfully',
     };
   }

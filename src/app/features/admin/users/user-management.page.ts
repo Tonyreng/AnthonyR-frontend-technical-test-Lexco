@@ -288,7 +288,7 @@ export class UserManagementPage implements OnInit {
     this.usersService
       .list({
         page,
-        per_page: 6,
+        per_page: 12,
         search: filters.search.trim() || undefined,
         role: filters.role || undefined,
       })
