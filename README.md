@@ -1,58 +1,96 @@
 # Lexco Frontend
 
-Frontend Angular 21 preparado para desarrollar la SPA de autenticacion, administracion, catalogo y carrito para la prueba tecnica.
+SPA en Angular 21 para la prueba tecnica de Lexco. Implementa autenticacion por sesion con cookies HTTPOnly, modulo administrativo, catalogo autenticado, carrito local y checkout contra backend Laravel.
+
+## Stack
+
+- Angular 21
+- TypeScript estricto
+- Angular Router con lazy loading
+- Reactive Forms
+- Signals para estado local
+- PrimeNG v21 + PrimeIcons
+- SCSS
+- Vitest via `ng test`
+- Docker Compose para desarrollo local
 
 ## Requisitos
+
+Para desarrollo con contenedores:
 
 - Docker
 - Docker Compose
 
-Para ejecucion local sin contenedores tambien puede usarse:
+Para desarrollo local sin Docker:
 
 - Node.js 24 o superior
 - npm 11 o superior
 
-## Entorno
+## Instalacion
 
-El proyecto usa Angular 21 con PrimeNG y SCSS.
-
-Valores principales para desarrollo local:
-
-- `http://localhost:4200` para el frontend.
-- `http://localhost/api` como URL base de la API Laravel.
-- Cookies HTTPOnly con `withCredentials: true` para autenticacion por sesion.
-- `CHOKIDAR_USEPOLLING=true` para hot reload dentro de Docker.
-
-Los archivos de entorno actuales son:
-
-- `src/environments/environment.ts`
-- `src/environments/environment.development.ts`
-
-Valor base configurado actualmente:
-
-- `apiUrl: 'http://localhost/api'`
-
-No subir secretos, tokens ni configuraciones sensibles reales al repositorio.
-
-## Comandos
-
-Instalar dependencias localmente:
+Instalar dependencias:
 
 ```bash
 npm install
 ```
 
-Levantar servidor local sin Docker:
+## Configuracion De Entorno
+
+Archivos actuales:
+
+- `src/environments/environment.ts`
+- `src/environments/environment.development.ts`
+
+Configuracion actual:
+
+```ts
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost/api',
+};
+```
+
+Notas importantes:
+
+- El frontend corre en `http://localhost:4200`.
+- La API esperada corre en `http://localhost/api`.
+- Todas las peticiones autenticadas usan cookies HTTPOnly.
+- El interceptor global agrega `withCredentials: true` a cada request.
+- No se usan Bearer tokens ni `localStorage`/`sessionStorage` para auth.
+
+No subir secretos, cookies, tokens ni configuraciones sensibles reales al repositorio.
+
+## Ejecucion
+
+Levantar frontend localmente:
 
 ```bash
 npm start
 ```
 
-Levantar servicios con Docker y hot reload:
+Levantar frontend con Docker y hot reload:
 
 ```bash
 docker compose up --build
 ```
+
+El script usado en Docker es:
+
+```bash
+npm run start:docker
+```
+
+## Scripts Disponibles
+
+```bash
+npm start
+npm run start:docker
+npm run build
+npm run watch
+npm test
+```
+
+## Validaciones
 
 Compilar proyecto:
 
@@ -60,13 +98,19 @@ Compilar proyecto:
 npm run build
 ```
 
-Ejecutar pruebas unitarias:
+Ejecutar pruebas:
 
 ```bash
 npm test
 ```
 
-Validar configuracion Docker Compose:
+Ejecutar pruebas sin modo watch:
+
+```bash
+npm test -- --watch=false
+```
+
+Validar Docker Compose:
 
 ```bash
 docker compose config
@@ -74,38 +118,35 @@ docker compose config
 
 ## Docker
 
-La configuracion Docker del frontend vive en:
+Archivos relevantes:
 
 - `Dockerfile`
 - `compose.yaml`
 - `.dockerignore`
 
-Comportamiento actual:
+Configuracion actual:
 
-- Publica Angular en `4200:4200`.
-- Ejecuta `ng serve --host 0.0.0.0 --poll 1000`.
-- Monta el codigo fuente local en `/app`.
-- Usa un volumen dedicado para `node_modules`.
-- Permite hot reload dentro del contenedor.
-
-Servicio disponible actualmente:
-
-- `angular`
+- Servicio: `angular`
+- Puerto publicado: `4200:4200`
+- Comando: `npm install && npm run start:docker`
+- Hot reload con `--poll 1000`
+- `CHOKIDAR_USEPOLLING=true`
+- Codigo montado en `/app`
+- Volumen aislado para `node_modules`
 
 ## Integracion Con Backend
 
 El frontend consume el backend Laravel ubicado en `../backend/`.
 
-Contrato de integracion esperado:
+Contrato esperado:
 
-- Frontend local: `http://localhost:4200`
-- Backend local: `http://localhost/api`
-- CORS backend debe permitir credenciales desde Angular.
-- El frontend no usa Bearer tokens.
-- La sesion autenticada viaja en cookie HTTPOnly.
-- El backend es la fuente real de permisos, roles, stock, precios y total de compra.
+- Frontend: `http://localhost:4200`
+- API: `http://localhost/api`
+- CORS backend debe permitir credenciales desde Angular
+- La autenticacion viaja en cookie HTTPOnly
+- El backend es la fuente real de permisos, roles, stock, precios y totales
 
-Endpoints soportados actualmente por el backend:
+Endpoints soportados actualmente:
 
 - `POST /api/auth/register`
 - `POST /api/auth/login`
@@ -126,60 +167,68 @@ Endpoints soportados actualmente por el backend:
 - `GET /api/catalog/products/{product}`
 - `POST /api/purchases`
 
-## Arquitectura Actual
+## Funcionalidades Implementadas
 
-La aplicacion esta preparada con componentes standalone, lazy loading y una capa inicial de tipado para el contrato backend.
+### Autenticacion
 
-Estructura principal:
+- Login con `email` y `password`
+- Register con `name`, `email`, `password` y `password_confirmation`
+- Carga de usuario actual con `GET /api/auth/me`
+- Logout con `POST /api/auth/logout`
+- Limpieza de sesion local ante `401`
+- Redireccion por rol:
+  - `admin` -> `/admin`
+  - `user` -> `/catalog`
 
-- `src/app/core/guards/`: `authGuard` y `roleGuard`.
-- `src/app/core/http/`: interceptor global de credenciales para cookies HTTPOnly.
-- `src/app/core/models/`: interfaces TypeScript alineadas al contrato actual del backend.
-- `src/app/core/services/`: servicios singleton, actualmente con base para autenticacion.
-- `src/app/features/auth/`: rutas lazy para login y register.
-- `src/app/features/admin/`: rutas lazy para dashboard, usuarios, productos y perfil.
-- `src/app/features/catalog/`: ruta lazy de catalogo autenticado.
-- `src/app/features/cart/`: ruta lazy de carrito.
+### Layout Global
 
-## Tipado Del Contrato API
+- Header fijo con accion de logout
+- Sidebar para rutas privadas
+- Sidebar colapsable
+- Navegacion diferenciada por rol
+- Badge reactivo con contador del carrito
 
-La capa de tipos actual cubre:
+### Admin
 
-- Respuestas genericas `ApiResponse<T>`.
-- Respuestas paginadas `PaginatedApiResponse<T>`.
-- Meta de paginacion.
-- Errores comunes `401`, `403`, `404`, `409` y `422`.
-- Tipos de auth, usuarios, productos, catalogo y compras.
-- Payloads de creacion, actualizacion y filtros para user management y product management.
+- Dashboard administrativo
+- Gestion de usuarios:
+  - listado paginado
+  - filtros por busqueda y rol
+  - crear, editar y eliminar
+  - protecciones para no borrar ni cambiar el rol propio
+  - boton `Limpiar` en filtros
+- Gestion de productos:
+  - listado paginado
+  - filtros por busqueda, categoria y stock
+  - crear, editar, eliminar y ver detalle
+  - boton `Limpiar` en filtros
+- Perfil admin:
+  - ver datos actuales
+  - editar nombre, email y password
 
-Archivos principales:
+### Usuario
 
-- `src/app/core/models/api-response.ts`
-- `src/app/core/models/user.ts`
-- `src/app/core/models/product.ts`
-- `src/app/core/models/purchase.ts`
-- `src/app/core/models/index.ts`
+- Catalogo autenticado:
+  - listado de productos disponibles
+  - filtro por busqueda
+  - filtro por categoria
+  - paginacion
+  - agregar al carrito
+  - boton `Limpiar` en filtros
+- Carrito:
+  - incremento y decremento de cantidades
+  - eliminacion de items
+  - vaciado total
+  - total estimado reactivo
+  - validacion local contra stock conocido
+- Checkout:
+  - envio de `POST /api/purchases`
+  - payload minimo `{ items: [{ product_id, quantity }] }`
+  - bloqueo de doble envio mientras procesa
+  - manejo de `401`, `409`, `422` y error generico
+  - modal de exito con resumen de compra, cantidades y total final
 
-## Autenticacion
-
-La configuracion base de autenticacion corresponde al commit inicial del frontend y al contrato backend publicado.
-
-Flujos preparados:
-
-- Register con `name`, `email`, `password` y `password_confirmation`.
-- Login con `email` y `password`.
-- Obtencion del usuario autenticado actual con `GET /api/auth/me`.
-- Logout con `POST /api/auth/logout`.
-
-Detalles de integracion:
-
-- Todas las peticiones HTTP autenticadas usan `withCredentials: true`.
-- El backend devuelve auth como `data.user`.
-- El frontend no almacena tokens sensibles.
-
-## Rutas Y Pantallas Base
-
-Rutas lazy registradas actualmente:
+## Rutas Implementadas
 
 - `/auth/login`
 - `/auth/register`
@@ -190,14 +239,64 @@ Rutas lazy registradas actualmente:
 - `/catalog`
 - `/cart`
 
-Restricciones preparadas:
+Reglas de acceso:
 
-- `authGuard` protege rutas privadas.
-- `roleGuard` protege rutas exclusivas de `admin`.
+- `authGuard` protege rutas privadas
+- `roleGuard` protege rutas admin
+- Ruta raiz redirige a `/catalog`
+- Rutas desconocidas redirigen a `/catalog`
+
+## Arquitectura
+
+Estructura principal:
+
+- `src/app/core/guards/`: guards de autenticacion y rol
+- `src/app/core/http/`: interceptor global de credenciales
+- `src/app/core/models/`: contratos TypeScript del backend
+- `src/app/core/services/`: auth, users, products, cart y purchases
+- `src/app/features/auth/`: login y register
+- `src/app/features/admin/`: dashboard, usuarios, productos y perfil
+- `src/app/features/catalog/`: catalogo autenticado
+- `src/app/features/cart/`: carrito y checkout
+- `src/environments/`: configuracion por entorno
+- `specs/`: especificaciones funcionales por feature
+
+Decisiones de arquitectura:
+
+- Componentes standalone
+- Lazy loading por dominio
+- `ChangeDetectionStrategy.OnPush`
+- Signals para estado local del carrito y estados de UI
+- Reactive Forms para auth y CRUD
+- Manejo de errores HTTP orientado a UX
+
+## Modelos Y Contrato API
+
+Tipado actual cubre:
+
+- `ApiResponse<T>`
+- `PaginatedApiResponse<T>`
+- `PaginationMeta`
+- errores `401`, `403`, `404`, `409` y `422`
+- modelos de usuario, producto, catalogo y compra
+- payloads de filtros, creacion y actualizacion
+
+Archivos relevantes:
+
+- `src/app/core/models/api-response.ts`
+- `src/app/core/models/user.ts`
+- `src/app/core/models/product.ts`
+- `src/app/core/models/purchase.ts`
 
 ## Compra De Productos
 
-El frontend esta alineado con el contrato backend para crear compras mediante `POST /api/purchases`.
+Checkout actual:
+
+- se ejecuta desde `/cart`
+- usa `POST /api/purchases`
+- envia solo `product_id` y `quantity`
+- no envia `price`, `subtotal`, `total`, `status` ni `user_id`
+- muestra modal de exito con resumen final
 
 Payload esperado:
 
@@ -212,20 +311,38 @@ Payload esperado:
 }
 ```
 
-Reglas relevantes:
+## Testing
 
-- No enviar `price`, `stock`, `subtotal`, `total`, `status` ni `user_id` como fuente de verdad.
-- El backend recalcula precios, stock y total.
-- El frontend debe usar el stock solo para UX local.
+Cobertura actual incluye pruebas para:
 
-## Validaciones Ejecutadas
+- auth
+- dashboard admin
+- gestion de usuarios
+- gestion de productos
+- perfil admin
+- catalogo
+- carrito
+- checkout del carrito
+- `CartService`
 
-Validaciones ejecutadas sobre el frontend actual:
+Ultima validacion conocida:
 
-- `npm run build`
-- `npm test`
-- `docker compose config`
-- `docker compose build`
+- `npm test -- --watch=false` -> `74 passed`
+- `npm run build` -> OK
+
+## Especificaciones Funcionales
+
+Specs actuales disponibles en `specs/`:
+
+- `specs/auth/login.md`
+- `specs/auth/register.md`
+- `specs/auth/logout.md`
+- `specs/admin/dashboard.md`
+- `specs/admin/user-management.md`
+- `specs/admin/product-management.md`
+- `specs/admin/profile.md`
+- `specs/catalog/product-catalog.md`
+- `specs/cart/checkout.md`
 
 ## Control De Versiones
 
@@ -233,24 +350,34 @@ Repositorio remoto:
 
 - `https://github.com/Tonyreng/AnthonyR-frontend-technical-test-Lexco.git`
 
-Flujo configurado:
+Flujo de ramas:
 
 - `main`
 - `develop`
 - `feature/*`
 
-Tags publicados actualmente:
+Tags publicados:
 
 - `v0.1.0-frontend-initial-setup`
 - `v0.2.0-backend-contract-interfaces`
+- `v0.3.0-layout-navigation`
+- `v0.4.0-auth-session-flow`
+- `v0.5.0-admin-dashboard`
+- `v0.6.0-user-management`
+- `v0.7.0-product-management`
+- `v0.8.0-admin-profile`
+- `v0.9.0-product-catalog`
+- `v0.10.0-cart-checkout`
 
 ## Estado Actual
 
-Hitos implementados actualmente:
+El frontend ya cubre el flujo principal de la prueba tecnica:
 
-- Inicializacion del proyecto Angular 21.
-- Configuracion Docker con hot reload.
-- Integracion base con PrimeNG y SCSS.
-- Guards e interceptor de credenciales.
-- Estructura lazy-loaded de features.
-- Tipado TypeScript del contrato actual del backend.
+- autenticacion por sesion
+- administracion de usuarios y productos
+- perfil admin
+- catalogo autenticado
+- carrito local reactivo
+- checkout con resumen de compra
+
+La principal funcionalidad aun fuera de alcance es el historial de compras o detalle persistido posterior a la compra.
