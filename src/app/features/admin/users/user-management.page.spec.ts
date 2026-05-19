@@ -95,6 +95,40 @@ describe('UserManagementPage', () => {
     request.flush(usersResponse([adminUser]));
   });
 
+  it('clears active filters and reloads users without filter params', () => {
+    fixture.detectChanges();
+    expectUsersRequest().flush(usersResponse([adminUser, regularUser]));
+    fixture.detectChanges();
+
+    const searchInput = fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement;
+    const roleSelect = fixture.nativeElement.querySelector('.users-role-filter select') as HTMLSelectElement;
+
+    searchInput.value = 'Carlos';
+    searchInput.dispatchEvent(new Event('input'));
+    roleSelect.value = 'user';
+    roleSelect.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+
+    expectUsersRequest().flush(usersResponse([regularUser]));
+    fixture.detectChanges();
+
+    const clearButton = fixture.nativeElement.querySelector('.users-filters .users-secondary-button') as HTMLButtonElement;
+
+    expect(clearButton.disabled).toBe(false);
+
+    clearButton.click();
+
+    const request = expectUsersRequest();
+
+    expect(request.request.params.get('page')).toBe('1');
+    expect(request.request.params.get('search')).toBeNull();
+    expect(request.request.params.get('role')).toBeNull();
+    expect((fixture.nativeElement.querySelector('input[type="search"]') as HTMLInputElement).value).toBe('');
+    expect((fixture.nativeElement.querySelector('.users-role-filter select') as HTMLSelectElement).value).toBe('');
+
+    request.flush(usersResponse([adminUser, regularUser]));
+  });
+
   it('creates a user and refreshes the list', () => {
     fixture.detectChanges();
     expectUsersRequest().flush(usersResponse([adminUser]));
