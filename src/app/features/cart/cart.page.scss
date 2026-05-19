@@ -10,7 +10,13 @@
 .cart-toolbar,
 .cart-item,
 .cart-item__controls,
-.cart-item__totals {
+.cart-item__totals,
+.cart-primary-button,
+.cart-secondary-button,
+.cart-modal__header,
+.cart-modal__footer,
+.cart-modal__item,
+.cart-modal__item-meta {
   display: flex;
   align-items: center;
 }
@@ -120,6 +126,114 @@
   border: 1px solid rgba(15, 23, 42, 0.08);
 }
 
+.cart-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.cart-modal__panel {
+  width: min(100%, 36rem);
+  display: grid;
+  gap: 1rem;
+}
+
+.cart-modal__header,
+.cart-modal__footer,
+.cart-modal__item {
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cart-modal__header h2 {
+  margin: 0;
+  color: #18253d;
+}
+
+.cart-modal__list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.cart-modal__item {
+  padding: 0.85rem 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.cart-modal__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.cart-modal__item small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #64748b;
+}
+
+.cart-modal__item-meta {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+}
+
+.cart-modal__footer {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.cart-modal__footer span {
+  display: block;
+  color: #64748b;
+}
+
+.cart-modal__footer strong {
+  color: #0f172a;
+  font-size: 1.05rem;
+}
+
+.cart-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: #eef3f7;
+  color: #283747;
+}
+
+.cart-summary__actions {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.cart-primary-button,
+.cart-secondary-button {
+  gap: 0.45rem;
+}
+
+.cart-alert {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(180, 35, 24, 0.2);
+  border-radius: 0.85rem;
+  background: #fff4f2;
+  color: #b42318;
+  font-weight: 700;
+}
+
+.cart-alert--success {
+  border-color: rgba(15, 118, 84, 0.18);
+  background: #e5f1ee;
+  color: #0f7654;
+}
+
 .cart-summary dl,
 .cart-summary dd {
   margin: 0;
@@ -161,6 +275,17 @@ button:disabled {
   }
 
   .cart-item__totals {
+    align-items: flex-start;
+  }
+
+  .cart-modal__header,
+  .cart-modal__footer,
+  .cart-modal__item {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .cart-modal__item-meta {
     align-items: flex-start;
   }
 }

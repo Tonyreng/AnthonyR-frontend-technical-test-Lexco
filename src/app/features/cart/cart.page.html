@@ -8,6 +8,55 @@
     <a class="cart-secondary-button" routerLink="/catalog">Volver al catálogo</a>
   </section>
 
+  @if (checkoutMessage(); as message) {
+    <p class="cart-alert cart-alert--success" role="status">{{ message }}</p>
+  }
+
+  @if (checkoutError(); as error) {
+    <p class="cart-alert" role="alert">{{ error }}</p>
+  }
+
+  @if (purchaseSummary(); as summary) {
+    <section class="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-summary-title">
+      <div class="cart-modal__panel page-card">
+        <header class="cart-modal__header">
+          <div>
+            <p class="eyebrow">Compra completada</p>
+            <h2 id="cart-summary-title">Resumen de la compra</h2>
+          </div>
+          <button type="button" class="cart-icon-button" (click)="closePurchaseSummary()" aria-label="Cerrar resumen de compra">
+            <i class="pi pi-times" aria-hidden="true"></i>
+          </button>
+        </header>
+
+        <p class="muted">Revisa los productos confirmados por esta compra.</p>
+
+        <div class="cart-modal__list" aria-label="Productos comprados">
+          @for (item of summary.items; track item.product.id) {
+            <article class="cart-modal__item">
+              <div>
+                <strong>{{ item.product.name }}</strong>
+                <small>{{ item.product.category }}</small>
+              </div>
+              <div class="cart-modal__item-meta">
+                <span>Cantidad: {{ item.quantity }}</span>
+                <strong>{{ summarySubtotal(item) }}</strong>
+              </div>
+            </article>
+          }
+        </div>
+
+        <footer class="cart-modal__footer">
+          <div>
+            <span>Total final</span>
+            <strong>{{ formatPrice(summary.total) }}</strong>
+          </div>
+          <button type="button" class="cart-primary-button" (click)="closePurchaseSummary()">Entendido</button>
+        </footer>
+      </div>
+    </section>
+  }
+
   @if (items().length === 0) {
     <section class="cart-state page-card">
       <i class="pi pi-shopping-cart" aria-hidden="true"></i>
@@ -28,9 +77,14 @@
             </div>
 
             <div class="cart-item__controls" aria-label="Controles de cantidad">
-              <button type="button" (click)="decrement(item.product.id)" aria-label="Reducir cantidad">-</button>
+              <button type="button" (click)="decrement(item.product.id)" [disabled]="isSubmitting()" aria-label="Reducir cantidad">-</button>
               <strong>{{ item.quantity }}</strong>
-              <button type="button" (click)="addOne(item.product.id)" [disabled]="item.quantity >= item.product.stock" aria-label="Aumentar cantidad">
+              <button
+                type="button"
+                (click)="addOne(item.product.id)"
+                [disabled]="item.quantity >= item.product.stock || isSubmitting()"
+                aria-label="Aumentar cantidad"
+              >
                 +
               </button>
             </div>
@@ -38,7 +92,7 @@
             <div class="cart-item__totals">
               <span>{{ formatPrice(item.product.price) }} c/u</span>
               <strong>{{ subtotal(item.product.price, item.quantity) }}</strong>
-              <button type="button" class="cart-danger-button" (click)="remove(item.product.id)">Quitar</button>
+              <button type="button" class="cart-danger-button" (click)="remove(item.product.id)" [disabled]="isSubmitting()">Quitar</button>
             </div>
           </article>
         }
@@ -53,7 +107,17 @@
             <dd>{{ formatPrice(totalAmount()) }}</dd>
           </div>
         </dl>
-        <button type="button" class="cart-secondary-button" (click)="clear()">Vaciar carrito</button>
+        <div class="cart-summary__actions">
+          <button type="button" class="cart-primary-button" (click)="checkout()" [disabled]="!canCheckout()">
+            @if (isSubmitting()) {
+              <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+              Procesando...
+            } @else {
+              Finalizar compra
+            }
+          </button>
+          <button type="button" class="cart-secondary-button" (click)="clear()" [disabled]="isSubmitting()">Vaciar carrito</button>
+        </div>
       </aside>
     </section>
   }
