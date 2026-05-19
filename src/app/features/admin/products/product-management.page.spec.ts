@@ -67,7 +67,7 @@ describe('ProductManagementPage', () => {
     const request = expectProductsRequest();
 
     expect(request.request.params.get('page')).toBe('1');
-    expect(request.request.params.get('per_page')).toBe('9');
+    expect(request.request.params.get('per_page')).toBe('12');
 
     request.flush(productsResponse([productA, productB]));
     fixture.detectChanges();
@@ -232,7 +232,7 @@ describe('ProductManagementPage', () => {
   function productsResponse(products: Product[]) {
     return {
       data: products,
-      meta: { current_page: 1, per_page: 9, total: products.length, last_page: 1 },
+      meta: { current_page: 1, per_page: 12, total: products.length, last_page: 1 },
       message: 'Products retrieved successfully',
     };
   }
